@@ -3,12 +3,17 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity
+  StyleSheet
 } from 'react-native';
 
-class Todo extends Component {
+import { connect } from 'react-redux';
+import { TodoForm } from './TodoForm';
+
+class _Todo extends Component {
+  static defaultProps = {
+    todos: []
+  }
+
   constructor() {
     super();
     this.state = {
@@ -24,9 +29,10 @@ class Todo extends Component {
   }
 
   handlePress() {
-    const todos = [...this.state.todos, this.state.newTodo];
+    this.props.createTodo(this.state.newTodo);
+    // const todos = [...this.state.todos, this.state.newTodo];
     this.setState({
-      todos,
+      // todos,
       newTodo: ''
     })
   }
@@ -34,23 +40,13 @@ class Todo extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            value={this.state.newTodo}
-            onChangeText={this.handleChangeText.bind(this)}
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this.handlePress.bind(this)}
-          >
-            <Text style={styles.buttonText}>
-              Create
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TodoForm
+          value = {this.state.newTodo}
+          handleChangeText = {this.handleChangeText.bind(this)}
+          handlePress = {this.handlePress.bind(this)}
+        />
         <View style={styles.todos}>
-          {this.state.todos.map((todo, i) => (
+          {this.props.todos.map((todo, i) => (
             <View key={i} style={styles.todo}>
               <Text style={styles.todoText}>{todo}</Text>
             </View>
@@ -61,30 +57,25 @@ class Todo extends Component {
   }
 }
 
+const mapActionsToProps = (dispatch) => ({
+  createTodo(todo) {
+    dispatch({
+      type: 'ADD_TODO',
+      payload: todo
+    })
+  }
+});
+
+const mapStateToProps = (state) => ({
+  todos: state.todos
+});
+
+export const Todo = connect(mapStateToProps, mapActionsToProps)(_Todo);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20
-  },
-  form: {
-    flexDirection: 'row'
-  },
-  input: {
-    flex: 0.7,
-    fontSize: 24
-  },
-  button: {
-    flex: 0.3,
-    height: 50,
-    borderWidth: 1,
-    borderColor: 'blue',
-    borderRadius: 3,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  buttonText: {
-    fontSize: 24,
-    fontWeight: 'bold'
   },
   todos: {
     marginTop: 60

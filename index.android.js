@@ -5,13 +5,19 @@
  */
 
 import React from 'react';
+import { Provider } from 'react-redux';
 
 import {
   AppRegistry
 } from 'react-native';
 
-import Todo from './src/Todo';
+import { store } from './src/store';
+import { Main } from './src/Main';
 
-const Main = () => (<Todo />)
+const App = () => (
+  <Provider store={store}>
+    <Main />
+  </Provider>
+)
 
-AppRegistry.registerComponent('ToDoList', () => Main);
+AppRegistry.registerComponent('ToDoList', () => App);
