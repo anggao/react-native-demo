@@ -10,7 +10,9 @@ const todos = (state=[], action) => {
       return [
         action.payload,
         ...state
-      ]
+      ];
+    case 'GET_TODOS':
+      return action.payload;
     default:
       return state;
   }

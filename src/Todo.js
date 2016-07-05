@@ -8,11 +8,12 @@ import {
 
 import { connect } from 'react-redux';
 import { TodoForm } from './TodoForm';
+import { createTodo, getTodos } from './actionCreator';
 
 class _Todo extends Component {
-  static defaultProps = {
-    todos: []
-  }
+  // static defaultProps = {
+  //   todos: []
+  // }
 
   constructor() {
     super();
@@ -20,6 +21,10 @@ class _Todo extends Component {
       todos: [],
       newTodo: ''
     };
+  }
+
+  componentDidMount() {
+    this.props.getTodos();
   }
 
   handleChangeText(text) {
@@ -48,7 +53,7 @@ class _Todo extends Component {
         <View style={styles.todos}>
           {this.props.todos.map((todo, i) => (
             <View key={i} style={styles.todo}>
-              <Text style={styles.todoText}>{todo}</Text>
+              <Text style={styles.todoText}>{todo.name}</Text>
             </View>
           ))}
         </View>
@@ -59,10 +64,10 @@ class _Todo extends Component {
 
 const mapActionsToProps = (dispatch) => ({
   createTodo(todo) {
-    dispatch({
-      type: 'ADD_TODO',
-      payload: todo
-    })
+    dispatch(createTodo({name: todo}))
+  },
+  getTodos() {
+    dispatch(getTodos())
   }
 });
 
